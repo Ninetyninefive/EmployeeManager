@@ -1,3 +1,3 @@
 # EmployeeManager
 
-# A (mock) project for managing employees.
+A (mock) project for managing employees.
