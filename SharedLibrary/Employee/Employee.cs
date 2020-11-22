@@ -175,21 +175,11 @@ namespace SharedLibrary
             }
         }
 
-        public override string ToString() => Id + "," + Password + "," + Admin + "," + Fname + "," + Lname + "," + Email + "," + Address + "," + Position + "," + Salary + ",";
+        public override string ToString() => Id + "," + Password + "," + Admin + "," + Fname + "," + Lname + "," + Email + "," + Address + "," + Position + "," + Salary + ";";
 
 
         public void ViewEmployee()
         {
-            if (Admin == "1")
-                Console.WriteLine($"Hello {Name}! (EmployeeID: {Id} ) isAdmin:{Admin}");
-            else
-                Console.WriteLine($"Hello {Name}! (EmployeeID: {Id} )");
-
-            Console.WriteLine($"Email is: {Email}");
-            Console.WriteLine($"Address is: {Address}");
-
-            Console.WriteLine($"\nSalary is: {Position}.");
-            Console.WriteLine($"\nSalary is: {Salary}.");
         }
 
     }

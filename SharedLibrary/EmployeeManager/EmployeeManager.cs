@@ -24,16 +24,17 @@ namespace SharedLibrary
             var empArray = employeeList.ToArray();
             foreach (var item in empArray)
             {
-                if (idToValidate == item.Id && passwordToValidate == item.Password)
-                {
-                    Console.WriteLine("Employee Validation -- Success!");
-                    return item;
-                }
                 if (idToValidate == item.Id && passwordToValidate == item.Password && item.Admin == "1")
                 {
                     Console.WriteLine("Admin Validation -- Success!");
                     return item;
                 }
+                if (idToValidate == item.Id && passwordToValidate == item.Password)
+                {
+                    Console.WriteLine("Employee Validation -- Success!");
+                    return item;
+                }
+
             }
             Console.WriteLine("Employee Validation -- Fail!");
             return new Employee();
@@ -48,7 +49,7 @@ namespace SharedLibrary
                 Directory.CreateDirectory(_path);
             }
 
-            if(!File.Exists(_filepath))
+            if (!File.Exists(_filepath))
             {
                 File.Create(_filepath);
             }
@@ -77,37 +78,40 @@ namespace SharedLibrary
             textWriter.Close();
         }
 
-        
+
         public List<Employee> TryLoadEmployeesFromFile()
         {
+            List<Employee> employeeListFromFile = new List<Employee>();
+
             if (!Directory.Exists(_path))
             {
                 Directory.CreateDirectory(_path);
             }
-            List<Employee> employeeList = new List<Employee>();
-
-            try
+            if (!File.Exists(_filepath))
             {
-                    FileStream file = File.Open(_filepath, FileMode.Open);
-                    string[] temployee = _filepath.Split('\n');
-                    file.Close();
-                    string[] sb = new string[9];
-                    foreach (var entry in temployee)
-                    {
-                       sb = entry.Split(',');
-                       Employee loadedEmployee = new Employee(sb[0], sb[1], sb[2], sb[3], sb[4], sb[5], sb[6], sb[7], sb[8]);
-                       employeeList.Add(loadedEmployee);
-                    }
-                return employeeList;
+                File.Create(_filepath);
             }
-
-            catch (Exception ex)
+            using (StreamReader file = File.OpenText(_filepath))
             {
-                Console.WriteLine($"Something went wrong when loading employee database @ >> {_path}");
+                var database = file.ReadToEnd();
+                file.Close();
+                var employeeFromDatabase = database.Split('\n');
+                var clean_database = database.Split(';');
+                
+                foreach (var item in clean_database)
+                {   
+                        var fields = item.Split(',');
+    
+                        Employee loadedEmployee = new Employee(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8]);
+                        employeeListFromFile.Add(loadedEmployee);
+                    
+                }
+                
+                Console.WriteLine("DB_Load was success! <Any Key>");
+                Console.ReadKey();
             }
-            return employeeList;
+            return employeeListFromFile;
         }
-
 
         public void SaveAllEmployeesToFile(List<Employee> employeeList)
         {
@@ -124,16 +128,32 @@ namespace SharedLibrary
 
                     foreach (var item in employeeList)
                     {
-                        sb.Append(item.ToString());
+                        sb.Append(item.ToString() + Environment.NewLine);
                     }
                     file.WriteLine(sb);
                     file.Close();
+                    Console.WriteLine("DB_Save was success! <Any Key>");
+                    Console.ReadKey();
                 }
                 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Something went wrong when saving database @ >> {_path}");
+                Console.WriteLine($"DEBUG:: Something went wrong when saving database @ >> {_path}");
+                using (StreamWriter file = File.CreateText(_filepath))
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    foreach (var item in employeeList)
+                    {
+                        sb.Append(item.ToString() + Environment.NewLine);
+                    }
+                    Console.WriteLine(sb);
+                    file.Close();
+
+                    Console.WriteLine("<Any key>");
+                    Console.ReadKey();
+                }
             }
         }
         
@@ -141,8 +161,7 @@ namespace SharedLibrary
 
         public string ValidateInput(string reason)
         {
-            Console.WriteLine("'help' for <help>\n");
-            Console.WriteLine($"Enter {reason}:");
+            Console.WriteLine($"Enter {reason}:\t'help' for <help> or 'quit' to <quit>\n");
             var input = Console.ReadLine();
             if (input == "quit")
             {
@@ -178,8 +197,8 @@ namespace SharedLibrary
             try
             {
                 var newID = ValidateInput("Employee Id");
-                var col = CheckForExistingId(employeeList, newID);
-                while (col)
+                var collidingID = CheckForExistingId(employeeList, newID);
+                while (collidingID)
                 {
                     newID = ValidateInput("Employee Id");
                 }
@@ -216,13 +235,10 @@ namespace SharedLibrary
                 }
                 else
                 {
-                    Employee root = new Employee("001", "password", "1");
+                    Employee root = new Employee("001", "password", "1", "root", "rootson", "rootmail", "rootvägen", "CEO of MEGAROOT", "All the munnies!");
                     employeeList.Add(root);
-                    SaveAllEmployeesToFile(employeeList);
                     //SaveToCSV(employeeList);
-
                     return employeeList;
-                    
                 }
             }
             return employeeList;
@@ -233,6 +249,9 @@ namespace SharedLibrary
 
             Employee employeeToEdit = GetEmployeeById(employeeList, lookForId);
 
+            Console.WriteLine("Employee to edit:");
+            Console.WriteLine(employeeToEdit.ToString());
+            
             employeeToEdit.Password = ValidateInput("Password");
             if (employeeToEdit.Admin == "1")
             {
@@ -263,7 +282,7 @@ namespace SharedLibrary
                     return employee;
                 }
                 else
-                    return (new Employee());
+                    return null;
             }
             return null;
         }
@@ -273,7 +292,9 @@ namespace SharedLibrary
                 foreach (Employee employee in employeeList)
                 {
                     Console.WriteLine(employee.ToString());
-                }   
+                }
+            Console.WriteLine("<Any key>");
+            Console.ReadKey();
         }
 
         public string MakeAdmin(List<Employee> employeeList, string lookForId)
@@ -286,10 +307,14 @@ namespace SharedLibrary
                 SaveAllEmployeesToFile(employeeList);
                 //SaveToCSV(employeeList);
                 return "Success!";
+                Console.WriteLine("<Any key>");
+                Console.ReadKey();
             }
             catch (Exception ex)
             {
                 return "Something went when making Admin";
+                Console.WriteLine("<Any key>");
+                Console.ReadKey();
             }
         }
 
@@ -302,10 +327,14 @@ namespace SharedLibrary
                 SaveAllEmployeesToFile(employeeList);
                 //SaveToCSV(employeeList);
                 return "Success!";
+                Console.WriteLine("<Any key>");
+                Console.ReadKey();
             }
             catch (Exception ex)
             {
                 return "Something went wrong when deleting employee";
+                Console.WriteLine("<Any key>");
+                Console.ReadKey();
             }
 
         }
