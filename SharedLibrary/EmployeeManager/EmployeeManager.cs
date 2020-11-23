@@ -93,7 +93,7 @@ namespace SharedLibrary
             }
             using (StreamReader file = File.OpenText(_filepath))
             {
-
+                var counter = 0;
                 var database = file.ReadToEnd();
                 
                 var singleEmployee = database.Split(';');
@@ -114,6 +114,7 @@ namespace SharedLibrary
                         if (!employeeListFromFile.Contains(loadedEmployee))
                         {
                             employeeListFromFile.Add(loadedEmployee);
+                            counter++;
                         }
                         else
                         {
@@ -121,7 +122,7 @@ namespace SharedLibrary
                         }
                 }
                 file.Close();
-                Console.WriteLine("DB_Load was success! <Any Key>");
+                Console.WriteLine($"DB_Load was success! ({counter} imported entries)\n<Any Key>");
                 Console.ReadKey();
                 
             }
@@ -176,7 +177,7 @@ namespace SharedLibrary
 
         public string ValidateInput(string reason)
         {
-            Console.WriteLine($"Enter {reason}:\t'help' for <help> or 'quit' to <quit>\n");
+            Console.WriteLine($"Enter {reason}:\t\t'help' for <help> or 'quit' to <quit>\n");
             var input = Console.ReadLine();
             if (input == "quit")
             {
