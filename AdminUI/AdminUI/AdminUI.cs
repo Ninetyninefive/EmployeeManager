@@ -10,24 +10,22 @@ namespace AdminUI
     {
         Employee root = new Employee("001", "password", "1", "root", "rootson", "rootmail", "rootvägen", "CEO of MEGAROOT", "All the munnies!");
         public Employee currentUser = new Employee();
-        public Employee selectedUser = new Employee();
         public EmployeeManager management = new EmployeeManager();
         public bool LoggedOn = false;
+        
 
 
         public void AdminLogon()
         {
+            Console.Clear();
+            Console.WriteLine("SETUP>>");
             List<Employee> employeeList = management.TryLoadEmployeesFromFile();
 
             employeeList.Add(root);
-
+            
             management.FindAdminOrRoot(employeeList);
 
-            foreach (var employee in employeeList)
-            {
-                employee.ToString();
-            }
-
+            Console.Clear();
             Console.WriteLine("Hello and welcome to the AdminUI of EmployeeManager\n");
             while (!LoggedOn)
             {

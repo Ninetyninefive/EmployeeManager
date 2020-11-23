@@ -16,7 +16,6 @@ namespace AdminUI.Program
         private static void Main(string[] args)
         {
             AdminUI admin = new AdminUI();
-            EmployeeManager manager = new EmployeeManager();
             admin.AdminLogon();
         }
     }

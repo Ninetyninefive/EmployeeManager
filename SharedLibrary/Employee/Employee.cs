@@ -56,6 +56,103 @@ namespace SharedLibrary
 
         }
 
+        public Employee(string Id, string Password, string Admin,
+                            string Fname)
+        {
+            //ID
+            _id = Id;
+            _password = Password;
+
+            _admin = Admin;
+            _fname = Fname;
+            _lname = Lname;
+
+            _email = Email;
+
+            _address = Address;
+
+            _position = Position;
+            _salary = Salary;
+
+        }
+        public Employee(string Id, string Password, string Admin,
+                            string Fname, string Lname)
+        {
+            //ID
+            _id = Id;
+            _password = Password;
+
+            _admin = Admin;
+            _fname = Fname;
+            _lname = Lname;
+
+            _email = Email;
+
+            _address = Address;
+
+            _position = Position;
+            _salary = Salary;
+
+        }
+        public Employee(string Id, string Password, string Admin,
+                            string Fname, string Lname, string Email)
+        {
+            //ID
+            _id = Id;
+            _password = Password;
+
+            _admin = Admin;
+            _fname = Fname;
+            _lname = Lname;
+
+            _email = Email;
+
+            _address = Address;
+
+            _position = Position;
+            _salary = Salary;
+
+        }
+        public Employee(string Id, string Password, string Admin,
+                            string Fname, string Lname, string Email,
+                                string Address)
+        {
+            //ID
+            _id = Id;
+            _password = Password;
+
+            _admin = Admin;
+            _fname = Fname;
+            _lname = Lname;
+
+            _email = Email;
+
+            _address = Address;
+
+            _position = Position;
+            _salary = Salary;
+
+        }
+        public Employee(string Id, string Password, string Admin,
+                            string Fname, string Lname, string Email,
+                                string Address, string Position)
+        {
+            //ID
+            _id = Id;
+            _password = Password;
+
+            _admin = Admin;
+            _fname = Fname;
+            _lname = Lname;
+
+            _email = Email;
+
+            _address = Address;
+
+            _position = Position;
+            _salary = Salary;
+
+        }
         public Employee( string Id, string Password, string Admin,
                             string Fname, string Lname, string Email,
                                 string Address, string Position, string Salary)

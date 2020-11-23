@@ -93,22 +93,37 @@ namespace SharedLibrary
             }
             using (StreamReader file = File.OpenText(_filepath))
             {
+
                 var database = file.ReadToEnd();
-                file.Close();
-                var employeeFromDatabase = database.Split('\n');
-                var clean_database = database.Split(';');
                 
-                foreach (var item in clean_database)
-                {   
-                        var fields = item.Split(',');
-    
-                        Employee loadedEmployee = new Employee(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8]);
-                        employeeListFromFile.Add(loadedEmployee);
-                    
+                var singleEmployee = database.Split(';');
+                
+                foreach (var item in singleEmployee)
+                {
+                    var employeeAttr = item.Split(',');
+
+                    if (employeeAttr.Length < 3)
+                    {
+                        continue;
+                    }
+                        for(int i=0; i<employeeAttr.Count(); i++)
+                        {
+                        Console.WriteLine(employeeAttr[i]);
+                        }
+                        Employee loadedEmployee = new Employee(employeeAttr[0], employeeAttr[1], employeeAttr[2], employeeAttr[3], employeeAttr[4], employeeAttr[5], employeeAttr[6], employeeAttr[7], employeeAttr[8]);
+                        if (!employeeListFromFile.Contains(loadedEmployee))
+                        {
+                            employeeListFromFile.Add(loadedEmployee);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Duplication handled.");
+                        }
                 }
-                
+                file.Close();
                 Console.WriteLine("DB_Load was success! <Any Key>");
                 Console.ReadKey();
+                
             }
             return employeeListFromFile;
         }
@@ -128,7 +143,7 @@ namespace SharedLibrary
 
                     foreach (var item in employeeList)
                     {
-                        sb.Append(item.ToString() + Environment.NewLine);
+                            sb.Append(item.ToString() + Environment.NewLine);
                     }
                     file.WriteLine(sb);
                     file.Close();
@@ -230,11 +245,12 @@ namespace SharedLibrary
             {
                 if (item.Admin == "1")
                 {
-                    Console.WriteLine("Admin found.");
+                    Console.WriteLine("Admin found in database.");
                     return employeeList;
                 }
                 else
                 {
+                    Console.WriteLine("Adding root~!");
                     Employee root = new Employee("001", "password", "1", "root", "rootson", "rootmail", "rootvägen", "CEO of MEGAROOT", "All the munnies!");
                     employeeList.Add(root);
                     //SaveToCSV(employeeList);
@@ -307,14 +323,10 @@ namespace SharedLibrary
                 SaveAllEmployeesToFile(employeeList);
                 //SaveToCSV(employeeList);
                 return "Success!";
-                Console.WriteLine("<Any key>");
-                Console.ReadKey();
             }
             catch (Exception ex)
             {
                 return "Something went when making Admin";
-                Console.WriteLine("<Any key>");
-                Console.ReadKey();
             }
         }
 
