@@ -10,6 +10,7 @@ namespace AdminUI
     {
         Employee root = new Employee("001", "password", "1", "root", "rootson", "rootmail", "rootvägen", "CEO of MEGAROOT", "All the munnies!");
         public Employee currentUser = new Employee();
+        public Employee selectedUser = new Employee();
         public EmployeeManager management = new EmployeeManager();
         public bool LoggedOn = false;
         
@@ -56,15 +57,14 @@ namespace AdminUI
             {
                 Console.Clear();
                 Console.WriteLine("Admin Control:\n");
-
+                Console.WriteLine("'quit' to exit application\n");
 
                 Console.WriteLine("1. DataDump: Show all entries in database\n");
-                Console.WriteLine("2. Create: Creates new Employee\n");
-                Console.WriteLine("3. EditEmployee: Select user by id and change it's information\n");
-                Console.WriteLine("4. Search: Find by employee id\n");
+                Console.WriteLine("2. Search: Find by employee id\n");
+                Console.WriteLine("3. Create: Creates new Employee\n");
+                Console.WriteLine("4. Edit: Select employee by id and let's you edit\n");
                 Console.WriteLine("5. MakeAdmin: Give admin rights to an existing Employee\n");
-                Console.WriteLine("6. DeleteUser: Deletes an existing Employee\n");
-
+                Console.WriteLine("6. Delete: Deletes an existing Employee\n");
                 Console.WriteLine("9. UPDATE: Updates current employeeDB to file (SAVE&LOAD)");
 
                 menuChoice = Console.ReadLine();
@@ -78,34 +78,32 @@ namespace AdminUI
                 if (menuChoice == "2")
                 {
                     Console.Clear();
-                    management.CreateEmployee(employeeList);
+                    var lookForId = management.ValidateInput("Id to SEARCH");
+                    var searchId = management.FindEmployeeById(employeeList, lookForId);
+                    Console.WriteLine(searchId.ToString());
+                    Console.ReadKey();
                 }
                 if (menuChoice == "3")
+                {
+                    Console.Clear();
+                    management.CreateEmployee(employeeList);
+                }
+                if (menuChoice == "4")
                 {
                     Console.Clear();
                     var lookForId = management.ValidateInput("Id to EDIT");
                     management.EditEmployee(employeeList, lookForId);
                 }
-                if (menuChoice == "4")
-                {
-                    Console.Clear();
-                    var lookForId = management.ValidateInput("Id to SEARCH");
-                    var searchID = management.GetEmployeeById(employeeList, lookForId);
-                    if (searchID == null)
-                    {
-                        Console.WriteLine("Error during lookup. <Any key>");
-                        Console.ReadKey();
-                    }
-                    else
-                        Console.WriteLine(searchID.ToString());
-                        Console.WriteLine("<Any key>");
-                        Console.ReadKey();
-                }
                 if (menuChoice == "5")
                 {
                     Console.Clear();
                     var lookForId = management.ValidateInput("Id to make ADMIN");
+                    var searchId = management.FindEmployeeById(employeeList, lookForId);
                     management.MakeAdmin(employeeList, lookForId);
+                    Console.WriteLine(searchId.ToString());
+                    Console.WriteLine("<Any key>");
+                    Console.ReadKey();
+                    
                 }
                 if (menuChoice == "6")
                 {

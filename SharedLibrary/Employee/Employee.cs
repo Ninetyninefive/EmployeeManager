@@ -201,7 +201,7 @@ namespace SharedLibrary
             {
                 if (value == "1")
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine($"{Id} // {Name} is an Admin.");
                     Console.ResetColor();
                 }
