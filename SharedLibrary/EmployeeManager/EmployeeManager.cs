@@ -21,22 +21,53 @@ namespace SharedLibrary
         {
             var idToValidate = ValidateInput("Employee ID");
             var passwordToValidate = ValidateInput("Password");
-            var empArray = employeeList.ToArray();
-            foreach (var item in empArray)
+            
+            foreach (var item in employeeList)
             {
                 if (idToValidate == item.Id && passwordToValidate == item.Password && item.Admin == "1")
                 {
-                    Console.WriteLine("Admin Validation -- Success!");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine($"Admin Validation -- Success!");
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine($"Welcome back, {item.Name} :ID#{item.Id}!");
+                    Console.ResetColor();
                     return item;
                 }
                 if (idToValidate == item.Id && passwordToValidate == item.Password)
                 {
-                    Console.WriteLine("Employee Validation -- Success!");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine($"Employee Validation -- Success!");
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine($"Welcome back, {item.Name} :ID#{item.Id}!");
+                    Console.ResetColor();
                     return item;
                 }
 
             }
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("Employee Validation -- Fail!");
+            Console.ResetColor();
+            return new Employee();
+        }
+        public Employee FindEmployeeById(List<Employee> employeeList)
+        {
+            var idToValidate = ValidateInput("Employee ID");
+
+            foreach (var item in employeeList)
+            {
+                if (idToValidate == item.Id)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine($"ID MATCH>>");
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine($"RESULT>> Name:{item.Name} :ID#{item.Id}!");
+                    Console.ResetColor();
+                    return item;
+                }
+            }
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("NO MATCH FOUND");
+            Console.ResetColor();
             return new Employee();
         }
 
@@ -96,7 +127,7 @@ namespace SharedLibrary
                 var counter = 0;
                 var database = file.ReadToEnd();
                 
-                var singleEmployee = database.Split(';');
+                var singleEmployee = database.Split('\n');
                 
                 foreach (var item in singleEmployee)
                 {
@@ -108,17 +139,23 @@ namespace SharedLibrary
                     }
                         for(int i=0; i<employeeAttr.Count(); i++)
                         {
-                        Console.WriteLine(employeeAttr[i]);
-                        }
+                        Console.WriteLine($"##{employeeAttr[i]}##{i}");
+                        
+                    }
                         Employee loadedEmployee = new Employee(employeeAttr[0], employeeAttr[1], employeeAttr[2], employeeAttr[3], employeeAttr[4], employeeAttr[5], employeeAttr[6], employeeAttr[7], employeeAttr[8]);
                         if (!employeeListFromFile.Contains(loadedEmployee))
                         {
-                            employeeListFromFile.Add(loadedEmployee);
-                            counter++;
+                            if (!(loadedEmployee.Id == "") && !(loadedEmployee.Password == "") && !(loadedEmployee.Admin == ""))
+                            {
+                                employeeListFromFile.Add(loadedEmployee);
+                                counter++;
+                            }
                         }
                         else
                         {
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
                             Console.WriteLine("Duplication handled.");
+                            Console.ResetColor();
                         }
                 }
                 file.Close();
@@ -131,6 +168,7 @@ namespace SharedLibrary
 
         public void SaveAllEmployeesToFile(List<Employee> employeeList)
         {
+            var counter = 0;
             try
             {
                 if (!Directory.Exists(_path))
@@ -144,11 +182,15 @@ namespace SharedLibrary
 
                     foreach (var item in employeeList)
                     {
-                            sb.Append(item.ToString() + Environment.NewLine);
+                        if (!(item.Id == "") && !(item.Password == "") && !(item.Admin == ""))
+                        {
+                            sb.Append(item.ToString());
+                            counter++;
+                        }
                     }
                     file.WriteLine(sb);
                     file.Close();
-                    Console.WriteLine("DB_Save was success! <Any Key>");
+                    Console.WriteLine($"DB_Save was success! ({counter} saved entries)\n<Any Key>");
                     Console.ReadKey();
                 }
                 
@@ -162,17 +204,27 @@ namespace SharedLibrary
 
                     foreach (var item in employeeList)
                     {
-                        sb.Append(item.ToString() + Environment.NewLine);
+                        if (!(item.Id == "") && !(item.Password == "") && !(item.Admin == ""))
+                        {
+                            sb.Append(item.ToString());
+                            counter++;
+                        }
                     }
                     Console.WriteLine(sb);
                     file.Close();
-
                     Console.WriteLine("<Any key>");
                     Console.ReadKey();
                 }
             }
         }
-        
+
+        public List<Employee> UpdateDB(List<Employee> employeeList)
+        {
+            SaveAllEmployeesToFile(employeeList);
+            var newEmployeeList = TryLoadEmployeesFromFile();
+
+            return newEmployeeList;
+        }
 
 
         public string ValidateInput(string reason)
@@ -202,7 +254,9 @@ namespace SharedLibrary
             {
                 if (newID == item.Id)
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("ID collision -- this ID already exists!");
+                    Console.ResetColor();
                     return true;
                 }
             }
@@ -228,10 +282,10 @@ namespace SharedLibrary
                 var newSalary = ValidateInput("Salary");
                 Employee newEmployee = new Employee(newID, newPassword, newAdmin, newFname, newLname, newEmail, newAddress, newPosition, newSalary);
                 employeeList.Add(newEmployee);
-                SaveAllEmployeesToFile(employeeList);
+                var newEmployeeList = UpdateDB(employeeList);
                 //SaveToCSV(employeeList);
 
-                return employeeList;
+                return newEmployeeList;
             }
             catch(Exception ex)
             {
@@ -254,8 +308,8 @@ namespace SharedLibrary
                     Console.WriteLine("Adding root~!");
                     Employee root = new Employee("001", "password", "1", "root", "rootson", "rootmail", "rootvägen", "CEO of MEGAROOT", "All the munnies!");
                     employeeList.Add(root);
-                    //SaveToCSV(employeeList);
-                    return employeeList;
+                    var newEmployeeList = UpdateDB(employeeList);
+                    return newEmployeeList;
                 }
             }
             return employeeList;
@@ -265,6 +319,8 @@ namespace SharedLibrary
         {
 
             Employee employeeToEdit = GetEmployeeById(employeeList, lookForId);
+            Employee oldInfo = new Employee();
+            oldInfo = employeeToEdit;
 
             Console.WriteLine("Employee to edit:");
             Console.WriteLine(employeeToEdit.ToString());
@@ -281,27 +337,32 @@ namespace SharedLibrary
             employeeToEdit.Position = ValidateInput("Position");
             employeeToEdit.Salary = ValidateInput("Salary");
 
+            //COMPARE TO ALL ENTRIES BY ID
+
             employeeList.Add(employeeToEdit);
-            SaveAllEmployeesToFile(employeeList);
+            var newEmployeeList = UpdateDB(employeeList);
             //SaveToCSV(employeeList);
 
-            return employeeList;
+            return newEmployeeList;
         }
 
         public Employee GetEmployeeById(List<Employee> employeeList, string lookForId)
         {
-            foreach (Employee employee in employeeList)
+            foreach (var item in employeeList)
             {
-                if (employee.Id == lookForId)
+                if (item.Id == lookForId)
                 {
-                    Console.WriteLine("Found match:\n");
-                    Console.WriteLine(employee.ToString());
-                    return employee;
+                    Console.WriteLine("Entry found in database.");
+                    return item;
                 }
                 else
-                    return null;
+                {
+                    Console.WriteLine("Entry not found");
+                    return new Employee();
+                }
             }
-            return null;
+            return new Employee();
+
         }
 
         public void DataDump(List<Employee> employeeList)
@@ -316,40 +377,34 @@ namespace SharedLibrary
 
         public string MakeAdmin(List<Employee> employeeList, string lookForId)
         {
-            try
+            var selectedEmployee = new Employee();
+            foreach (var item in employeeList)
             {
-                Employee selectedEmployee = GetEmployeeById(employeeList, lookForId);
-                selectedEmployee.Admin = "1";
-                employeeList.Add(selectedEmployee);
-                SaveAllEmployeesToFile(employeeList);
-                //SaveToCSV(employeeList);
-                return "Success!";
+                if (item.Id == lookForId)
+                {
+                    selectedEmployee = item;
+                    selectedEmployee.Admin = "1";
+                    employeeList.Add(selectedEmployee);
+                    UpdateDB(employeeList);
+                    return selectedEmployee.ToString();
+                }
             }
-            catch (Exception ex)
-            {
-                return "Something went when making Admin";
-            }
+            return "Something went awry.";
         }
 
-        public string DeleteEmployee(List<Employee> employeeList, string lookForId)
+        public List<Employee> DeleteEmployee(List<Employee> employeeList, string lookForId)
         {
-            try
+            
+            Employee selectedEmployee = GetEmployeeById(employeeList, lookForId);
+            if(selectedEmployee != null)
             {
-                Employee selectedEmployee = GetEmployeeById(employeeList, lookForId);
                 employeeList.Remove(selectedEmployee);
-                SaveAllEmployeesToFile(employeeList);
-                //SaveToCSV(employeeList);
-                return "Success!";
-                Console.WriteLine("<Any key>");
-                Console.ReadKey();
+                var newEmployeeList = UpdateDB(employeeList);
+                return newEmployeeList;
             }
-            catch (Exception ex)
-            {
-                return "Something went wrong when deleting employee";
-                Console.WriteLine("<Any key>");
-                Console.ReadKey();
-            }
-
+            return employeeList;
         }
+
+
     }
 }

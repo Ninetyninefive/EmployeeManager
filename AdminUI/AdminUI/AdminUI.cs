@@ -21,7 +21,7 @@ namespace AdminUI
             Console.WriteLine("SETUP>>");
             List<Employee> employeeList = management.TryLoadEmployeesFromFile();
 
-            employeeList.Add(root);
+            //employeeList.Add(root);
             
             management.FindAdminOrRoot(employeeList);
 
@@ -65,9 +65,7 @@ namespace AdminUI
                 Console.WriteLine("5. MakeAdmin: Give admin rights to an existing Employee\n");
                 Console.WriteLine("6. DeleteUser: Deletes an existing Employee\n");
 
-
-                Console.WriteLine("8. LOAD: Loads current employeeDB from file");
-                Console.WriteLine("9. SAVE: Saves current employeeDB to file");
+                Console.WriteLine("9. UPDATE: Updates current employeeDB to file (SAVE&LOAD)");
 
                 menuChoice = Console.ReadLine();
 

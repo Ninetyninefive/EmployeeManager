@@ -3,11 +3,11 @@ namespace SharedLibrary
 {
     public class Employee
     {
-        
-        private string  _id;
-        private string  _password;
 
-        private string  _admin;
+        private string _id = "default";
+        private string _password = "default";
+
+        private string _admin = "0";
 
         private string  _fname;
         private string  _lname;
@@ -174,6 +174,7 @@ namespace SharedLibrary
 
         }
 
+        public override string ToString() => Id + "," + Password + "," + Admin + "," + Fname + "," + Lname + "," + Email + "," + Address + "," + Position + "," + Salary + ";";
 
         public string Id
         {
@@ -270,13 +271,6 @@ namespace SharedLibrary
             {
                 _salary = value;
             }
-        }
-
-        public override string ToString() => Id + "," + Password + "," + Admin + "," + Fname + "," + Lname + "," + Email + "," + Address + "," + Position + "," + Salary + ";";
-
-
-        public void ViewEmployee()
-        {
         }
 
     }
