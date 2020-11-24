@@ -13,7 +13,8 @@ namespace SharedLibrary
 
         //public static string _filename = Directory.GetCurrentDirectory() + "employeeDB.csv";
         //public override string ToString() => Id + "," + Password + "," + Admin + "," + Fname + "," + Lname + "," + Email + "," + Address + "," + Position + "," + Salary + ";";
-        public static string _path = "EmployeeDB";
+        //public static string _path = "EmployeeDB";
+        public static string _path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         public static string _filepath = _path + "/employees.csv";
 
         public EmployeeManager()
@@ -94,6 +95,7 @@ namespace SharedLibrary
 
         public List<Employee> TryLoadEmployeesFromFile()
         {
+           
             List<Employee> employeeListFromFile = new List<Employee>();
 
             if (!Directory.Exists(_path))
@@ -208,6 +210,73 @@ namespace SharedLibrary
             }
         }
 
+        public string DisplayFromFile()
+        {
+            Console.WriteLine("Shows entries in files tha are not in working memory:");
+
+            List<Employee> employeeListFromFile = new List<Employee>();
+
+            if (!Directory.Exists(_path))
+            {
+                Directory.CreateDirectory(_path);
+            }
+            if (!File.Exists(_filepath))
+            {
+                File.Create(_filepath);
+            }
+            using (StreamReader file = File.OpenText(_filepath))
+            {
+                var countEmployees = 0;
+                var countLoads = 0;
+                var database = file.ReadToEnd();
+                database.Replace('\n', ';');
+                var singleEmployee = database.Split(';');
+
+                foreach (var item in singleEmployee)
+                {
+                    countEmployees++;
+                    var employeeAttr = item.Split(',');
+
+                    if (employeeAttr.Length < 3)
+                    {
+                        continue;
+                    }
+                    Employee loadedEmployee = new Employee(employeeAttr[0].Trim(), employeeAttr[1].TrimStart().TrimEnd(), employeeAttr[2].TrimStart().TrimEnd(), employeeAttr[3].TrimStart().TrimEnd(), employeeAttr[4].TrimStart().TrimEnd(), employeeAttr[5].TrimStart().TrimEnd(), employeeAttr[6].TrimStart().TrimEnd(), employeeAttr[7].TrimStart().TrimEnd(), employeeAttr[8].TrimStart().TrimEnd());
+                    foreach (var existing in employeeListFromFile)
+                    {
+                        if (loadedEmployee == existing)
+                        {
+                            continue;
+                        }
+                    }
+                    if (!employeeListFromFile.Contains(loadedEmployee))
+                    {
+                        if (!(loadedEmployee.Id == "") && !(loadedEmployee.Password == "") && !(loadedEmployee.Admin == ""))
+                        {
+                            employeeListFromFile.Add(loadedEmployee);
+                            countLoads++;
+                        }
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("Duplication handled.");
+                        Console.ResetColor();
+                    }
+                }
+                file.Close();
+
+
+                foreach (var item in employeeListFromFile)
+                {
+                    item.ToString();
+                }
+                Console.WriteLine($"DB_Show was success! ({countLoads} entries)\n<Any Key>");
+                Console.ReadKey();
+
+            }
+            return "Done with fileduump";
+        }
         public List<Employee> UpdateDB(List<Employee> employeeList)
         {
             SaveAllEmployeesToFile(employeeList);
@@ -370,10 +439,17 @@ namespace SharedLibrary
 
         public void DataDump(List<Employee> employeeList)
         {
+            Console.WriteLine("Entries in working memory:");
             foreach (Employee employee in employeeList)
             {
                 Console.WriteLine(employee.ToString());
             }
+            Console.WriteLine("<Any key>");
+            Console.ReadKey();
+
+            Console.WriteLine("Entries in working memory:");
+            Console.WriteLine(DisplayFromFile());
+
             Console.WriteLine("<Any key>");
             Console.ReadKey();
         }

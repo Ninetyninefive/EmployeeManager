@@ -22,7 +22,7 @@ namespace AdminUI
             Console.WriteLine("SETUP>>");
             List<Employee> employeeList = management.TryLoadEmployeesFromFile();
 
-            //employeeList.Add(root);
+            employeeList.Add(root);
             
             management.FindAdminOrRoot(employeeList);
 

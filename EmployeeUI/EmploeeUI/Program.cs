@@ -1,6 +1,9 @@
 ﻿using System;
+using EmployeeUI;
+using System.IO;
+using SharedLibrary;
 
-namespace EmployeeUI
+namespace EmployeeUI.Program
 {
     class Program
     {
