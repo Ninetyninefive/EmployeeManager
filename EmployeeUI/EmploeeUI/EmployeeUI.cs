@@ -21,26 +21,33 @@ namespace EmployeeUI
             Console.WriteLine("SETUP>>");
             List<Employee> employeeList = management.TryLoadEmployeesFromFile();
 
-            //employeeList.Add(root);
+            employeeList.Add(root);
 
             management.FindAdminOrRoot(employeeList);
 
             Console.Clear();
-            Console.WriteLine("Hello and welcome to the AdminUI of EmployeeManager\n");
+            Console.WriteLine("Hello and welcome to the Employee UI of EmployeeManager\n");
             while (!LoggedOn)
             {
-                var validAdmin = management.ValidateEmployee(employeeList);
-                if (validAdmin.Admin == "1")
+                var validEmployee = management.ValidateEmployee(employeeList);
+                if (validEmployee.Admin == "0")
                 {
-                    currentUser = validAdmin;
+                    currentUser = validEmployee;
 
-                    Console.WriteLine("You successfully logged on as an Admin!");
+                    Console.WriteLine("You successfully logged on as an Employee!");
+                    LoggedOn = true;
+                }
+                if (validEmployee.Admin == "1")
+                {
+                    currentUser = validEmployee;
+
+                    Console.WriteLine("You successfully logged on as an Employee\nYou also have access to the AdminUI!");
                     LoggedOn = true;
                 }
 
                 else
                 {
-                    Console.WriteLine("Login as Admin unsuccessful...");
+                    Console.WriteLine("Login was unsuccessful...");
                 }
             }
             if (LoggedOn)
@@ -55,24 +62,42 @@ namespace EmployeeUI
             while (menuChoice != "quit")
             {
                 Console.Clear();
-                Console.WriteLine("Employee Control:\n");
+                Console.WriteLine($"Employee Control:  [{currentUser.Fname} - ID:{currentUser.Id}]\n");
                 Console.WriteLine("'quit' to exit application\n");
 
-
-                Console.WriteLine("1. Edit: Select employee by id and let's you edit\n");
-                Console.WriteLine("(DEBUG)10. DataDump: Show all entries in database\n");
-                Console.WriteLine("5. UPDATE: Updates current employeeDB to file (SAVE&LOAD)");
+                Console.WriteLine("1. EDIT: Update your own details\n");
+                
+                Console.WriteLine("5. UPDATE: Updates current employeeDB to file (SAVE&LOAD)\n");
 
                 /*
-                Console.WriteLine("(DEBUG)10. DataDump: Show all entries in database\n");
-                Console.WriteLine("(DEBUG)20. Search: Find by employee id\n");
-                Console.WriteLine("(DEBUG)30. Create: Creates new Employee\n");
-                Console.WriteLine("(DEBUG)50. MakeAdmin: Give admin rights to an existing Employee\n");
-                Console.WriteLine("(DEBUG)60. Delete: Deletes an existing Employee\n");
+                Console.ForegroundColor = ConsoleColor.DarkGray;                
+                Console.WriteLine("\n\t\t\t(DEBUG)10. DataDump: Show all entries in database\n");
+                Console.WriteLine("\t\t\t(DEBUG)20. Search: Find by employee id\n");
+                Console.WriteLine("\t\t\t(DEBUG)30. Create: Creates new Employee\n");
+                Console.WriteLine("\t\t\t(DEBUG)50. MakeAdmin: Give admin rights to an existing Employee\n");
+                Console.WriteLine("\t\t\t(DEBUG)60. Delete: Deletes an existing Employee\n");
+                Console.ResetColor();
                 */
 
                 menuChoice = Console.ReadLine();
 
+                if (menuChoice == "1")
+                {
+                    Console.Clear();
+                    var lookForId = currentUser.Id;
+                    management.EditEmployee(employeeList, lookForId);
+                }
+                if (menuChoice == "5")
+                {
+                    management.SaveAllEmployeesToFile(employeeList);
+                }
+
+                if (menuChoice == "help")
+                {
+                    Console.Clear();
+                    EmployeeMenu(employeeList);
+                }
+                /*
                 if (menuChoice == "10")
                 {
                     Console.Clear();
@@ -92,12 +117,7 @@ namespace EmployeeUI
                     Console.Clear();
                     management.CreateEmployee(employeeList);
                 }
-                if (menuChoice == "1")
-                {
-                    Console.Clear();
-                    var lookForId = management.ValidateInput("Id to EDIT");
-                    management.EditEmployee(employeeList, lookForId);
-                }
+
                 if (menuChoice == "50")
                 {
                     Console.Clear();
@@ -115,20 +135,8 @@ namespace EmployeeUI
                     var lookForId = management.ValidateInput("Id for DELETE");
                     management.DeleteEmployee(employeeList, lookForId);
                 }
-                if (menuChoice == "8")
-                {
-                    employeeList = management.TryLoadEmployeesFromFile();
-                }
-                if (menuChoice == "9")
-                {
-                    management.SaveAllEmployeesToFile(employeeList);
-                }
-
-                if (menuChoice == "help")
-                {
-                    Console.Clear();
-                    EmployeeMenu(employeeList);
-                }
+                */
+                
             }
         }
     }

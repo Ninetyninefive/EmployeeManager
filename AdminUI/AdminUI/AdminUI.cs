@@ -56,7 +56,7 @@ namespace AdminUI
             while (menuChoice != "quit")
             {
                 Console.Clear();
-                Console.WriteLine("Admin Control:\n");
+                Console.WriteLine($"Admin Control:  [{currentUser.Fname} - ID:{currentUser.Id}]\n");
                 Console.WriteLine("'quit' to exit application\n");
 
                 Console.WriteLine("1. DataDump: Show all entries in database\n");
