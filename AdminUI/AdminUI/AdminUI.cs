@@ -27,7 +27,7 @@ namespace AdminUI
             management.FindAdminOrRoot(employeeList);
 
             Console.Clear();
-            Console.WriteLine("Hello and welcome to the AdminUI of EmployeeManager\n");
+            Console.WriteLine("Hello and welcome to the AdminUI of EmployeeManager\n Root@[001:password]");
             while (!LoggedOn)
             {
             var validAdmin = management.ValidateEmployee(employeeList);
@@ -67,7 +67,7 @@ namespace AdminUI
                 Console.WriteLine("6. Delete: Deletes an existing Employee\n");
                 Console.WriteLine("9. UPDATE: Updates current employeeDB to file (SAVE&LOAD)");
 
-                menuChoice = Console.ReadLine();
+                menuChoice = management.ValidateInput("Menu choice");
 
                 if (menuChoice == "1")
                 {

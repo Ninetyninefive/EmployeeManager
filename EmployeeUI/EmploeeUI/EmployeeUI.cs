@@ -69,16 +69,6 @@ namespace EmployeeUI
                 
                 Console.WriteLine("5. UPDATE: Updates current employeeDB to file (SAVE&LOAD)\n");
 
-                /*
-                Console.ForegroundColor = ConsoleColor.DarkGray;                
-                Console.WriteLine("\n\t\t\t(DEBUG)10. DataDump: Show all entries in database\n");
-                Console.WriteLine("\t\t\t(DEBUG)20. Search: Find by employee id\n");
-                Console.WriteLine("\t\t\t(DEBUG)30. Create: Creates new Employee\n");
-                Console.WriteLine("\t\t\t(DEBUG)50. MakeAdmin: Give admin rights to an existing Employee\n");
-                Console.WriteLine("\t\t\t(DEBUG)60. Delete: Deletes an existing Employee\n");
-                Console.ResetColor();
-                */
-
                 menuChoice = management.ValidateInput("Menu choice");
 
                 if (menuChoice == "1")
@@ -97,45 +87,6 @@ namespace EmployeeUI
                     Console.Clear();
                     EmployeeMenu(employeeList);
                 }
-                /*
-                if (menuChoice == "10")
-                {
-                    Console.Clear();
-                    Console.WriteLine("DataDump:");
-                    management.DataDump(employeeList);
-                }
-                if (menuChoice == "20")
-                {
-                    Console.Clear();
-                    var lookForId = management.ValidateInput("Id to SEARCH");
-                    var searchId = management.FindEmployeeById(employeeList, lookForId);
-                    Console.WriteLine(searchId.ToString());
-                    Console.ReadKey();
-                }
-                if (menuChoice == "30")
-                {
-                    Console.Clear();
-                    management.CreateEmployee(employeeList);
-                }
-
-                if (menuChoice == "50")
-                {
-                    Console.Clear();
-                    var lookForId = management.ValidateInput("Id to make ADMIN");
-                    var searchId = management.FindEmployeeById(employeeList, lookForId);
-                    management.MakeAdmin(employeeList, lookForId);
-                    Console.WriteLine(searchId.ToString());
-                    Console.WriteLine("<Any key>");
-                    Console.ReadKey();
-
-                }
-                if (menuChoice == "60")
-                {
-                    Console.Clear();
-                    var lookForId = management.ValidateInput("Id for DELETE");
-                    management.DeleteEmployee(employeeList, lookForId);
-                }
-                */
                 
             }
         }

@@ -10,10 +10,6 @@ namespace SharedLibrary
 
     public class EmployeeManager
     {
-
-        //public static string _filename = Directory.GetCurrentDirectory() + "employeeDB.csv";
-        //public override string ToString() => Id + "," + Password + "," + Admin + "," + Fname + "," + Lname + "," + Email + "," + Address + "," + Position + "," + Salary + ";";
-        //public static string _path = "EmployeeDB";
         public static string _path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         public static string _filepath = _path + "/employees.csv";
 
@@ -53,45 +49,6 @@ namespace SharedLibrary
             Console.ResetColor();
             return new Employee();
         }
-
-        public List<Employee> LoadFromCSV()
-        {
-            List<Employee> employeeList = new List<Employee>();
-
-            if (!Directory.Exists(_path))
-            {
-                Directory.CreateDirectory(_path);
-            }
-
-            if (!File.Exists(_filepath))
-            {
-                File.Create(_filepath);
-            }
-
-            TextReader textReader = File.OpenText(_filepath);
-            CsvHelper.CsvReader csv = new CsvHelper.CsvReader((CsvHelper.IParser)textReader);
-
-            var employees = csv.GetRecords<Employee>();
-
-            foreach (var employee in employees)
-            {
-                employeeList.Add(employee);
-            }
-            textReader.Close();
-
-            return employeeList;
-        }
-
-        public void SaveToCSV(List<Employee> employeeList)
-        {
-            TextWriter textWriter = File.CreateText(_filepath);
-
-            CsvHelper.CsvWriter csvWriter = new CsvHelper.CsvWriter((CsvHelper.ISerializer)textWriter);
-            csvWriter.WriteRecords(employeeList);
-
-            textWriter.Close();
-        }
-
 
         public List<Employee> TryLoadEmployeesFromFile()
         {
@@ -174,10 +131,11 @@ namespace SharedLibrary
 
                     foreach (var item in employeeList)
                     {
+                        
                         if (!(item.Id == "") && !(item.Password == "") && !(item.Admin == ""))
                         {
-                            sb.Append(item.ToString().TrimStart().TrimEnd() + ';');
-                            counter++;
+                                sb.Append(item.ToString().TrimStart().TrimEnd() + ';');
+                                counter++;   
                         }
                     }
                     file.WriteLine(sb);
