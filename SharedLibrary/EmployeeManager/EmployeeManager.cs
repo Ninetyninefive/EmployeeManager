@@ -444,10 +444,7 @@ namespace SharedLibrary
             {
                 Console.WriteLine(employee.ToString());
             }
-            Console.WriteLine("<Any key>");
-            Console.ReadKey();
-
-            Console.WriteLine("Entries in working memory:");
+            Console.WriteLine("Entries found in database not found in working memory:");
             Console.WriteLine(DisplayFromFile());
 
             Console.WriteLine("<Any key>");

@@ -26,7 +26,7 @@ namespace EmployeeUI
             management.FindAdminOrRoot(employeeList);
 
             Console.Clear();
-            Console.WriteLine("Hello and welcome to the Employee UI of EmployeeManager\n");
+            Console.WriteLine("Hello and welcome to the Employee UI of EmployeeManager\nRoot@[001:password]");
             while (!LoggedOn)
             {
                 var validEmployee = management.ValidateEmployee(employeeList);
@@ -79,7 +79,7 @@ namespace EmployeeUI
                 Console.ResetColor();
                 */
 
-                menuChoice = Console.ReadLine();
+                menuChoice = management.ValidateInput("Menu choice");
 
                 if (menuChoice == "1")
                 {
